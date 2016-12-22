@@ -1,32 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using SnakeGame.Model;
 
 namespace SnakeGame
 {
     public partial class GameForm : Form
     {
         List<SnakePart> snake = new List<SnakePart>();
-        const int TileWidth = 16;
-        const int TileHeight = 16;
-        const string ScoreFile = "score.txt";
-        bool gameOver = false;
-        int score = 0;
-        int timerInterval = 150;  //milliseconds 
-        int direction = 0;  // Down = 0, Left = 1, Right = 2, Up = 3
         SnakePart food = new SnakePart();
-        
+        const int TILE_WIDTH = 16;
+        const int TILE_HEIGHT = 16;
+        const string SCORE_FILE = "score.txt";
+        bool _gameOver = false;
+        int _score = 0;
+        int _timerInterval = 150;   //milliseconds 
+        int _direction = 0;         // Down = 0, Left = 1, Right = 2, Up = 3
+               
         public GameForm()
         {
             InitializeComponent();
-            gameTimer.Interval = timerInterval;     
+            gameTimer.Interval = _timerInterval;     
             gameTimer.Tick += new EventHandler(Update);
             gameTimer.Start();
             StartGame();
@@ -34,21 +31,19 @@ namespace SnakeGame
 
         private void StartGame()
         {
-            gameOver = false;
-            score = 0;
-            direction = 0;
+            _gameOver = false;
+            _score = 0;
+            _direction = 0;
             snake.Clear();
             SnakePart head = new SnakePart(10, 5);
-            gameTimer.Interval = timerInterval;
+            gameTimer.Interval = _timerInterval;
             snake.Add(head);
-            food.GenerateFood(picBox.Size.Width / TileWidth, picBox.Size.Height / TileHeight);
-        }
-
-       
+            food.GenerateFood(picBox.Size.Width / TILE_WIDTH, picBox.Size.Height / TILE_HEIGHT);
+        }     
 
         private void Update(object sender, EventArgs e)
         {
-            if (gameOver)
+            if (_gameOver)
             {
                 if (Input.Pressed(Keys.Enter))
                     StartGame();
@@ -58,22 +53,22 @@ namespace SnakeGame
                 if (Input.Pressed(Keys.Right))
                 {
                     if (snake.Count < 2 || snake[0].X == snake[1].X)
-                        direction = 2;
+                        _direction = 2;
                 }
                 else if (Input.Pressed(Keys.Left))
                 {
                     if (snake.Count < 2 || snake[0].X == snake[1].X)
-                        direction = 1;
+                        _direction = 1;
                 }
                 else if (Input.Pressed(Keys.Up))
                 {
                     if (snake.Count < 2 || snake[0].Y == snake[1].Y)
-                        direction = 3;
+                        _direction = 3;
                 }
                 else if (Input.Pressed(Keys.Down))
                 {
                     if (snake.Count < 2 || snake[0].Y == snake[1].Y)
-                        direction = 0;
+                        _direction = 0;
                 }
                 UpdateSnake();
             }
@@ -86,7 +81,7 @@ namespace SnakeGame
             {
                 if (i == 0)
                 {
-                    switch (direction)
+                    switch (_direction)
                     {
                         case 0: // Down
                             snake[i].Y++;
@@ -102,23 +97,25 @@ namespace SnakeGame
                             break;
                     }
 
-                    int maxTileWidth = picBox.Width / TileWidth;
-                    int maxTileHeight = picBox.Height / TileHeight;
+                    int maxTileWidth = picBox.Width / TILE_WIDTH;
+                    int maxTileHeight = picBox.Height / TILE_HEIGHT;
 
-                    gameOver = snake[i].X < 0 || snake[i].X >= maxTileWidth || snake[i].Y < 0 || snake[i].Y >= maxTileHeight;
+                    _gameOver = snake[i].X < 0 || snake[i].X >= maxTileWidth || snake[i].Y < 0 || snake[i].Y >= maxTileHeight;
 
                     for (int j = 1; j < snake.Count; j++)
                     {
-                        if (snake[i].X == snake[j].X && snake[i].Y == snake[j].Y)
-                            gameOver = true;
+                        if (snake[i].CompareTo(snake[j]) == 0)
+                        {
+                            _gameOver = true;
+                        }
                     }
 
-                    if (snake[i].X == food.X && snake[i].Y == food.Y)
+                    if(snake[i].CompareTo(food) == 0)
                     {
                         SnakePart part = new SnakePart(snake[snake.Count - 1].X, snake[snake.Count - 1].Y);
                         snake.Add(part);
-                        food.GenerateFood(picBox.Size.Width / TileWidth, picBox.Size.Height / TileHeight);
-                        score++;
+                        food.GenerateFood(picBox.Size.Width / TILE_WIDTH, picBox.Size.Height / TILE_HEIGHT);
+                        _score++;
                         gameTimer.Interval -= 10;
                     }
                 }
@@ -133,11 +130,11 @@ namespace SnakeGame
         private void picBox_Paint(object sender, PaintEventArgs e)
         {
             Graphics canvas = e.Graphics;
-            if (gameOver)
+            if (_gameOver)
             {
                 Font font = this.Font;
                 string gameoverMsg = "Gameover";
-                string scoreMsg = "Score: " + score.ToString();
+                string scoreMsg = "Score: " + _score.ToString();
                 string newGameMsg = "Press Enter to Start Over";
                 int centerWidth = picBox.Width / 2;
                 SizeF msgSize = canvas.MeasureString(gameoverMsg, font);
@@ -155,11 +152,11 @@ namespace SnakeGame
                 for (int i = 0; i < snake.Count; i++)
                 {
                     Brush snake_color = i == 0 ? Brushes.Red : Brushes.Black;
-                    canvas.FillRectangle(snake_color, new Rectangle(snake[i].X * TileWidth, snake[i].Y * TileHeight, TileWidth, TileHeight));
+                    canvas.FillRectangle(snake_color, new Rectangle(snake[i].X * TILE_WIDTH, snake[i].Y * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT));
                 }
 
-                canvas.FillRectangle(Brushes.Orange, new Rectangle(food.X * TileWidth, food.Y * TileHeight, TileWidth, TileHeight));
-                canvas.DrawString("Score: " + score.ToString(), this.Font, Brushes.White, new PointF(4, 4));
+                canvas.FillRectangle(Brushes.Orange, new Rectangle(food.X * TILE_WIDTH, food.Y * TILE_HEIGHT, TILE_WIDTH, TILE_HEIGHT));
+                canvas.DrawString("Score: " + _score.ToString(), this.Font, Brushes.White, new PointF(4, 4));
             }
         }
 
@@ -175,28 +172,28 @@ namespace SnakeGame
 
         private void saveScoreToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string strToWrite = $"{DateTime.Now.ToString()} - scores: {score.ToString()}";
+            string strToWrite = $"{DateTime.Now.ToString()} - scores: {_score.ToString()}";
             StreamWriter file;
 
             try
             {
-                using (file = new StreamWriter(ScoreFile, true))
+                using (file = new StreamWriter(SCORE_FILE, true))
                 {
                     file.WriteLine(strToWrite);
                     file.Close();
                 }
 
-                MessageBox.Show($"Score was saved to file: {ScoreFile}", "Info");              
+                MessageBox.Show($"Score was saved to file: {SCORE_FILE}", "Info");              
             }
             catch (Exception)
             {
-                MessageBox.Show($"Score was not saved to file", "Error");
+                MessageBox.Show($"Some error occured. Score wasn't saved to file", "Error");
             }
         }
 
         private void finishToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            gameOver = true;
+            _gameOver = true;
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -206,7 +203,7 @@ namespace SnakeGame
 
         private void showBestScoreToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            int bestScore = GetBestScoreFromFile(ScoreFile);
+            int bestScore = GetBestScoreFromFile(SCORE_FILE);
             MessageBox.Show($"Best score: {bestScore.ToString()}", "Info");
         }
 
