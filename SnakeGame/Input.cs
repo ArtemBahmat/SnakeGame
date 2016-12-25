@@ -14,8 +14,9 @@ namespace SnakeGame
 
         public static bool Pressed(Keys key)
         {
-            bool result = keys.ContainsKey(key) ? keys[key] : false;
-            return result;
+            bool value = false;
+            keys.TryGetValue(key, out value);
+            return value;
         }
     }
 }

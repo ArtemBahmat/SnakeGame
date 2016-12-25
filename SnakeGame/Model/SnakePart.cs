@@ -1,9 +1,8 @@
 ﻿using System;
-using SnakeGame.Interfaces;
 
 namespace SnakeGame.Model
 {
-    public class SnakePart : IEatable, IComparable<SnakePart>
+    public class SnakePart : IComparable<SnakePart>
     {
         public int X { get; set; }
         public int Y { get; set; }

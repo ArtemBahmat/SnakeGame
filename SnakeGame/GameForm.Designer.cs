@@ -32,12 +32,12 @@
             this.picBox = new System.Windows.Forms.PictureBox();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showBestScoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveScoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hrToolStripMenuItem = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.finishToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gameTimer = new System.Windows.Forms.Timer(this.components);
-            this.showBestScoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.picBox)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -51,7 +51,7 @@
             this.picBox.Size = new System.Drawing.Size(509, 366);
             this.picBox.TabIndex = 0;
             this.picBox.TabStop = false;
-            this.picBox.Paint += new System.Windows.Forms.PaintEventHandler(this.picBox_Paint);
+            this.picBox.Paint += new System.Windows.Forms.PaintEventHandler(this.PicBox_Paint);
             // 
             // menuStrip1
             // 
@@ -75,38 +75,38 @@
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
+            // showBestScoreToolStripMenuItem
+            // 
+            this.showBestScoreToolStripMenuItem.Name = "showBestScoreToolStripMenuItem";
+            this.showBestScoreToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+            this.showBestScoreToolStripMenuItem.Text = "Show best score";
+            this.showBestScoreToolStripMenuItem.Click += new System.EventHandler(this.ShowBestScoreToolStripMenuItem_Click);
+            // 
             // saveScoreToolStripMenuItem
             // 
             this.saveScoreToolStripMenuItem.Name = "saveScoreToolStripMenuItem";
-            this.saveScoreToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.saveScoreToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.saveScoreToolStripMenuItem.Text = "Save score";
-            this.saveScoreToolStripMenuItem.Click += new System.EventHandler(this.saveScoreToolStripMenuItem_Click);
+            this.saveScoreToolStripMenuItem.Click += new System.EventHandler(this.SaveScoreToolStripMenuItem_Click);
             // 
             // hrToolStripMenuItem
             // 
             this.hrToolStripMenuItem.Name = "hrToolStripMenuItem";
-            this.hrToolStripMenuItem.Size = new System.Drawing.Size(126, 6);
+            this.hrToolStripMenuItem.Size = new System.Drawing.Size(156, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.exitToolStripMenuItem.Text = "Exit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
             // 
             // finishToolStripMenuItem
             // 
             this.finishToolStripMenuItem.Name = "finishToolStripMenuItem";
             this.finishToolStripMenuItem.Size = new System.Drawing.Size(50, 20);
             this.finishToolStripMenuItem.Text = "Finish";
-            this.finishToolStripMenuItem.Click += new System.EventHandler(this.finishToolStripMenuItem_Click);
-            // 
-            // showBestScoreToolStripMenuItem
-            // 
-            this.showBestScoreToolStripMenuItem.Name = "showBestScoreToolStripMenuItem";
-            this.showBestScoreToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
-            this.showBestScoreToolStripMenuItem.Text = "Show best score";
-            this.showBestScoreToolStripMenuItem.Click += new System.EventHandler(this.showBestScoreToolStripMenuItem_Click);
+            this.finishToolStripMenuItem.Click += new System.EventHandler(this.FinishToolStripMenuItem_Click);
             // 
             // GameForm
             // 

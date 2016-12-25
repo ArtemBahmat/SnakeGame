@@ -17,8 +17,16 @@ namespace SnakeGame
         const string SCORE_FILE = "score.txt";
         bool _gameOver = false;
         int _score = 0;
-        int _timerInterval = 150;   //milliseconds 
-        int _direction = 0;         // Down = 0, Left = 1, Right = 2, Up = 3
+        int _timerInterval = 200;   //milliseconds 
+        Direction direction;
+
+        enum Direction
+        {
+            Down = 0,
+            Left = 1, 
+            Right = 2, 
+            Up = 3
+        }
                
         public GameForm()
         {
@@ -33,7 +41,8 @@ namespace SnakeGame
         {
             _gameOver = false;
             _score = 0;
-            _direction = 0;
+            
+            direction = Direction.Down;
             snake.Clear();
             SnakePart head = new SnakePart(10, 5);
             gameTimer.Interval = _timerInterval;
@@ -53,22 +62,22 @@ namespace SnakeGame
                 if (Input.Pressed(Keys.Right))
                 {
                     if (snake.Count < 2 || snake[0].X == snake[1].X)
-                        _direction = 2;
+                        direction = Direction.Right;
                 }
                 else if (Input.Pressed(Keys.Left))
                 {
                     if (snake.Count < 2 || snake[0].X == snake[1].X)
-                        _direction = 1;
+                        direction = Direction.Left;
                 }
                 else if (Input.Pressed(Keys.Up))
                 {
                     if (snake.Count < 2 || snake[0].Y == snake[1].Y)
-                        _direction = 3;
+                        direction = Direction.Up;
                 }
                 else if (Input.Pressed(Keys.Down))
                 {
                     if (snake.Count < 2 || snake[0].Y == snake[1].Y)
-                        _direction = 0;
+                        direction = Direction.Down;
                 }
                 UpdateSnake();
             }
@@ -81,18 +90,18 @@ namespace SnakeGame
             {
                 if (i == 0)
                 {
-                    switch (_direction)
+                    switch (direction)
                     {
-                        case 0: // Down
+                        case Direction.Down: 
                             snake[i].Y++;
                             break;
-                        case 1: // Left
+                        case Direction.Left: 
                             snake[i].X--;
                             break;
-                        case 2: // Right
+                        case Direction.Right: 
                             snake[i].X++;
                             break;
-                        case 3: // Up
+                        case Direction.Up: 
                             snake[i].Y--;
                             break;
                     }
@@ -127,7 +136,7 @@ namespace SnakeGame
             }
         }
 
-        private void picBox_Paint(object sender, PaintEventArgs e)
+        private void PicBox_Paint(object sender, PaintEventArgs e)
         {
             Graphics canvas = e.Graphics;
             if (_gameOver)
@@ -166,11 +175,14 @@ namespace SnakeGame
         }
 
         private void GameForm_KeyDown(object sender, KeyEventArgs e)
-        {
+        {         
             Input.ChangeState(e.KeyCode, true);
+            gameTimer.Stop();
+            Update(null, null);
+            gameTimer.Start();
         }
 
-        private void saveScoreToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SaveScoreToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string strToWrite = $"{DateTime.Now.ToString()} - scores: {_score.ToString()}";
             StreamWriter file;
@@ -191,17 +203,17 @@ namespace SnakeGame
             }
         }
 
-        private void finishToolStripMenuItem_Click(object sender, EventArgs e)
+        private void FinishToolStripMenuItem_Click(object sender, EventArgs e)
         {
             _gameOver = true;
         }
 
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Environment.Exit(0);
         }
 
-        private void showBestScoreToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ShowBestScoreToolStripMenuItem_Click(object sender, EventArgs e)
         {
             int bestScore = GetBestScoreFromFile(SCORE_FILE);
             MessageBox.Show($"Best score: {bestScore.ToString()}", "Info");
